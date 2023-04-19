@@ -1,0 +1,19 @@
+.global _start
+
+.section .text
+
+  mov (Bool), %rax
+
+  cmpl $2, (%rax)
+  jne bad_exit
+  
+  movq $0, %rdi
+  syscall
+
+bad_exit:
+  movq $1, %rdi
+  syscall
+
+.section .data
+num: .int 6
+array2: .zero 16
