@@ -3,7 +3,6 @@
 .section .text
 _start:
 #your code here
-            jmp test
             movq (num), %rax
             movq $0, %rcx #counter (to 64)
             movq $0, %rdx #counts 1's
@@ -20,4 +19,4 @@ zero_HW1:   inc %rcx
             jne loop_HW1
 
             movb %dl, (Bool)
-test:
+
