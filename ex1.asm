@@ -9,14 +9,14 @@ _start:
 
             
 loop_HW1:   movq $1, %rbx
-            shll %cl, %rbx
+            salq %cl, %rbx
             and %rax, %rbx 
-            cmp %rbx, $0 
+            cmp $0, %rbx 
             jz zero_HW1 #the bit we currently check is 0, skip counter inc
             inc %rdx
 zero_HW1:   inc %rcx
             cmp $64, %rcx
             jne loop_HW1
 
-            movb %rdx (Bool) 
+            movb %dl, (Bool) 
 
