@@ -2,18 +2,22 @@
 
 .section .text
 
-  mov (Bool), %rax
+  jmp aaa
+  mov (Bool), %rsi
 
-  cmpl $2, (%rax)
+  cmpl $2, (%rsi)
   jne bad_exit
   
-  movq $0, %rdi
+  movq $60, %rsi
+  movq $0, %rdi # X is 0 or 1 in the real code
   syscall
 
 bad_exit:
-  movq $1, %rdi
+  movq $60, %rsi
+  movq $1, %rdi # X is 0 or 1 in the real code
   syscall
+aaa:
 
 .section .data
 num: .int 6
-array2: .zero 16
+Bool: .zero 16
