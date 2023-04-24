@@ -5,29 +5,32 @@ _start:
         movq $source, %r8
         movq $destination, %r9
         movl (num), %r10d #num is 4 bytes max
+        cmp $0, %r10d #edge case of num = 0
+        je end_HW1
         cmp $0, %r10d
         jg srcToDest_HW1
         #here for negative num
-        movq %r10, (destination) #that's all ?
+        movl %r10d, (destination) #that's all ?
         jmp end_HW1
 
 srcToDest_HW1:
-        movl $0, %r11d #counter
+        movq $0, %r11 #counter
         cmp %r8, %r9
-        jg reverse #r9 > r8, writing to dest might ruin src, use modified loop
+        #jg reverse_HW1 #r9 > r8, writing to dest might ruin src, use modified loop
+        #todo need to fix reverse
 loop_HW1:
-        movb (%r8, %r11d), %r12d
-        movb %r12d, (%r9, %r11d)
+        movb (%r8, %r11, 1), %r12b
+        movb %r12b, (%r9, %r11, 1)
         inc %r11d
-        cmp %r10d, %r11d
+        cmpl %r10d, %r11d
         jne loop_HW1
         jmp end_HW1
 
-reverse_HW1
+reverse_HW1:
         movl %r10d, %r11d #counter
-loop_reverse_HW1: #need to add _HW1
-        movb (%r8, %r11d), %r12d
-        movb %r12d, (%r9, %r11d)
+loop_reverse_HW1:
+        movb (%r8, %r11, 1), %r12b
+        movb %r12b, (%r9, %r11, 1)
         dec %r11d
         cmp $0, %r11d
         jne loop_reverse_HW1
