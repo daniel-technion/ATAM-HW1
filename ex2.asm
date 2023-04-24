@@ -9,27 +9,28 @@ _start:
         jg srcToDest_HW1
         #here for negative num
         movq %r10, (destination) #that's all ?
+        jmp end_HW1
 
-        jmp end
 srcToDest_HW1:
         movl $0, %r11d #counter
         cmp %r8, %r9
         jg reverse #r9 > r8, writing to dest might ruin src, use modified loop
-loop:
-        movb (%r8, %r11d, 4), %r12d
-        movb %r12d, (%r9, %r11d, 4)
+loop_HW1:
+        movb (%r8, %r11d, 8), %r12d
+        movb %r12d, (%r9, %r11d, 8)
         inc %r11d
         cmp %r10d, %r11d
-        jne loop
-        jmp end
-reverse:
+        jne loop_HW1
+        jmp end_HW1
+
+reverse_HW1
         movl %r10d, %r11d #counter
-loop_reverse: #need to add _HW1
-        movb (%r8, %r11d, 4), %r12d
-        movb %r12d, (%r9, %r11d, 4)
+loop_reverse_HW1: #need to add _HW1
+        movb (%r8, %r11d, 8), %r12d
+        movb %r12d, (%r9, %r11d, 8)
         dec %r11d
         cmp $0, %r11d
-        jne loop_reverse
-        jmp end
+        jne loop_reverse_HW1
+        jmp end_HW1
 
-end:
+end_HW1:
