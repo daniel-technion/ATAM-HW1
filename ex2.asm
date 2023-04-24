@@ -16,8 +16,8 @@ srcToDest_HW1:
         cmp %r8, %r9
         jg reverse #r9 > r8, writing to dest might ruin src, use modified loop
 loop_HW1:
-        movb (%r8, %r11d, 8), %r12d
-        movb %r12d, (%r9, %r11d, 8)
+        movb (%r8, %r11d), %r12d
+        movb %r12d, (%r9, %r11d)
         inc %r11d
         cmp %r10d, %r11d
         jne loop_HW1
@@ -26,8 +26,8 @@ loop_HW1:
 reverse_HW1
         movl %r10d, %r11d #counter
 loop_reverse_HW1: #need to add _HW1
-        movb (%r8, %r11d, 8), %r12d
-        movb %r12d, (%r9, %r11d, 8)
+        movb (%r8, %r11d), %r12d
+        movb %r12d, (%r9, %r11d)
         dec %r11d
         cmp $0, %r11d
         jne loop_reverse_HW1

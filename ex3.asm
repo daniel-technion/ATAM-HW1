@@ -3,40 +3,64 @@
 .section .text
 _start:
 
-movl (array1), %eax #move the adress, l for 32 bit adress (%eax is 32 as well)
-movl (array2), %ebx
-movl (mergedArray), %ecx
+movq (array1), %rax # move the adress, l for 32 bit adress (%eax is 32 as well)
+movq (array2), %rbx
+movq (mergedArray), %rcx
 
-xor %rdx, %rdx #counter1
-xor %rsi, %rsi #counter2
-xor %rdi, %rdi #counter merged
+xor %rdx, %rdx # counter1
+xor %rsi, %rsi # counter2
+xor %rdi, %rdi # counter merged
+
+cmp $0 (%rax) # corner cases
+je array1End_HW1
+cmp $0 (%rbx) 
+je array2End_HW1
 
 loop_HW1:
-movl (%eax, %rdx, 16), r8d #extract the next element in the array from memory
-movl (%ebx, %rsi, 16), r9d
+movl (%rax, %rdx, 4), %r8d          # extract the next element in the array from memory
+movl (%rbx, %rsi, 4), %r9d
 cmp %r8d, %r9d
 jg arr2entryBigger_HW1
 
-#else arr1 entry is bigger:
-# TODO: make sure it is not out-of-range on first iteration
-cmp $0, %rdi #if this is first iteration, don't try to check kif equal to last
-cmovne %r8d, -16(%ecx, %rdi, 16) #move to merged only if not equal to the last one
-
-copyFirst_HW1:
-
+# else arr1 entry is bigger:
+cmp $0, %rdi                        # if this is first iteration, don't try to check kif equal to last
+je copyArr1First_HW1
+cmp %r8d, -4(%rcx, %rdi, 4)
+cmovne %r8d, (%rcx, %rdi, 4)     # move to merged only if not equal to the last one
+jmp continue1_HW1
+copyArr1First_HW1:
+movl %r8d, (%rcx, %rdi, 4)
+continue1_HW1:
 inc %rdx
 inc %rdi
-cmp $0, (%ecx, %rdi, 16)
-jne loop_HW1
+cmp $0, (%rax, %rdx, 4)            
+jne loop_HW1                        # if we didn't reached the end of arr1, jump back to the loop
+jmp array1End_HW1
 
 arr2entryBigger_HW1:
-# TODO: compare to last entry, make sure it is not out-of-range
-movl %r9d, (%ecx, %rdi, 16) 
+cmp $0, %rdi
+je copyArr2First_HW1
+cmp %r9d, -4(%rcx, %rdi, 4)
+cmovne %r9d, (%rcx, %rdi, 4)
+jmp continue2_HW1
+copyArr2First_HW1:
+movl %r9d, (%rcx, %rdi, 4)
+continue2_HW1:
 inc %rsi
 inc %rdi
+cmp $0, (%rcx, %rsi, 4)  
 jne loop_HW1
+jmp array2End_HW1
 
-array1End_HW1:
+array1End_HW1:              # copy the rest of array2
+cmp $0, (%ebx, %rsi, 4)     # check if array2 has ended too
+je end                      
+jmp loop_HW1                # array1 has ended, thus we will always copy array2, till they both end
 
-array2End_HW1:
+array2End_HW1:             # copy the rest of array1
+cmp $0, (%eax, %rdx, 4)    
+je end                     # don't copy if array1 has ended too 
+jmp loop_HW1
+
+end:
 
